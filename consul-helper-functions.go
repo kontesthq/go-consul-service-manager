@@ -36,14 +36,14 @@ func NewConsulService(consulHost string, consulPort int) *ConsulService {
 	}
 }
 
-func (c *ConsulService) Start(port int, serviceName string) {
+func (c *ConsulService) Start(serviceAddress string, servicePort int, serviceName string) {
 	serviceID := serviceName + "-1"
 
 	// Ensure the service is deregistered when the application shuts down
 	//defer c.deregisterService(serviceID) // Will run when Start() exits
 
 	// Register service and start health check
-	c.registerService(port, serviceName, serviceID)
+	c.registerService(serviceAddress, servicePort, serviceName, serviceID)
 	go c.updateHealthCheck(serviceID)
 
 	// Set up signal handling to wait for termination signals
@@ -55,7 +55,7 @@ const (
 	checkID = "checkAlive"
 )
 
-func (c *ConsulService) registerService(port int, serviceName string, serviceID string) {
+func (c *ConsulService) registerService(serviceAddress string, servicePort int, serviceName string, serviceID string) {
 
 	check := &api.AgentServiceCheck{
 		DeregisterCriticalServiceAfter: ttl.String(),
@@ -69,8 +69,8 @@ func (c *ConsulService) registerService(port int, serviceName string, serviceID 
 		Name:    serviceName,
 		ID:      serviceID,
 		Tags:    []string{"kontest-api"},
-		Address: "127.0.0.1", // Could be made configurable
-		Port:    port,
+		Address: serviceAddress,
+		Port:    servicePort,
 		Check:   check,
 	}
 
@@ -79,7 +79,7 @@ func (c *ConsulService) registerService(port int, serviceName string, serviceID 
 		log.Fatalf("Failed to register service: %v", err)
 	}
 
-	log.Println("Service registered with Consul on port " + strconv.Itoa(port))
+	log.Println("Service registered with Consul on servicePort " + strconv.Itoa(servicePort))
 }
 
 func (c *ConsulService) deregisterService(serviceID string) {

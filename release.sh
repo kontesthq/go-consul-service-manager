@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Define the version tag
-VERSION="v0.1.0"
+VERSION="v0.1.1"
 
 # Navigate to the current directory
 cd "$(pwd)" || exit
