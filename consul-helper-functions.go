@@ -1,4 +1,4 @@
-package utils
+package main
 
 import (
 	"github.com/hashicorp/consul/api"
@@ -36,14 +36,14 @@ func NewConsulService(consulHost string, consulPort int) *ConsulService {
 	}
 }
 
-func (c *ConsulService) Start(serviceAddress string, servicePort int, serviceName string) {
+func (c *ConsulService) Start(hostName string, servicePort int, serviceName string, tags []string) {
 	serviceID := serviceName + "-1"
 
 	// Ensure the service is deregistered when the application shuts down
 	//defer c.deregisterService(serviceID) // Will run when Start() exits
 
 	// Register service and start health check
-	c.registerService(serviceAddress, servicePort, serviceName, serviceID)
+	c.registerService(hostName, servicePort, serviceName, serviceID, tags)
 	go c.updateHealthCheck(serviceID)
 
 	// Set up signal handling to wait for termination signals
@@ -55,7 +55,7 @@ const (
 	checkID = "checkAlive"
 )
 
-func (c *ConsulService) registerService(serviceAddress string, servicePort int, serviceName string, serviceID string) {
+func (c *ConsulService) registerService(hostName string, servicePort int, serviceName string, serviceID string, tags []string) {
 
 	check := &api.AgentServiceCheck{
 		DeregisterCriticalServiceAfter: ttl.String(),
@@ -68,8 +68,8 @@ func (c *ConsulService) registerService(serviceAddress string, servicePort int, 
 	serviceRegistration := &api.AgentServiceRegistration{
 		Name:    serviceName,
 		ID:      serviceID,
-		Tags:    []string{"kontest-api"},
-		Address: serviceAddress,
+		Address: hostName,
+		Tags:    tags,
 		Port:    servicePort,
 		Check:   check,
 	}
