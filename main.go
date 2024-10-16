@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/ayushs-2k4/go-consul-service-manager/consulservicemanager"
 	"log"
 	"net/http"
 	"os"
@@ -10,7 +11,7 @@ import (
 
 func main() {
 	portInt := 9876
-	consulService := NewConsulService("localhost", 5150)
+	consulService := consulservicemanager.NewConsulService("localhost", 5150)
 
 	hostname, err := os.Hostname()
 	if err != nil {
