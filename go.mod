@@ -1,4 +1,4 @@
-module github.com/ayushs-2k4/go-consul-service-manager
+module github.com/kontesthq/go-consul-service-manager
 
 go 1.23.2
 

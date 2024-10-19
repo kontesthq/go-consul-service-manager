@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/ayushs-2k4/go-consul-service-manager/consulservicemanager"
+	"github.com/kontesthq/go-consul-service-manager/consulservicemanager"
 	"log"
 	"net/http"
 	"os"
