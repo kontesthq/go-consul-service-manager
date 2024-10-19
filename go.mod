@@ -2,7 +2,10 @@ module github.com/ayushs-2k4/go-consul-service-manager
 
 go 1.23.2
 
-require github.com/hashicorp/consul/api v1.29.4
+require (
+	github.com/hashicorp/consul/api v1.29.4
+	github.com/hashicorp/go-uuid v1.0.3
+)
 
 require (
 	github.com/armon/go-metrics v0.4.1 // indirect

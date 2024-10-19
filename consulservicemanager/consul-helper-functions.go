@@ -2,6 +2,7 @@ package consulservicemanager
 
 import (
 	"github.com/hashicorp/consul/api"
+	"github.com/hashicorp/go-uuid"
 	"log"
 	"os"
 	"os/signal"
@@ -37,7 +38,13 @@ func NewConsulService(consulHost string, consulPort int) *ConsulService {
 }
 
 func (c *ConsulService) Start(hostName string, servicePort int, serviceName string, tags []string) {
-	serviceID := serviceName + "-1"
+	service_unique_id, err := uuid.GenerateUUID()
+
+	if err != nil {
+		return
+	}
+
+	serviceID := serviceName + "-" + service_unique_id
 
 	// Ensure the service is deregistered when the application shuts down
 	//defer c.deregisterService(serviceID) // Will run when Start() exits
